@@ -1,0 +1,11 @@
+**/__pycache__
+__pycache__
+**/coverage
+**/.idea
+**/.vscode
+**/coverage
+**/*.ipynb
+**/.ipynb_checkpoints
+**/.pytest_cache
+README.md
+notebooks
