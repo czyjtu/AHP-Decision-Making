@@ -1,0 +1,62 @@
+{
+  "criteria": [
+    {
+      "id": "Laptop score",
+      "higher_better": true,
+      "sub_criteria": ["design", "cost", "performance"]
+    },
+    {
+      "id": "design",
+      "higher_better": true,
+      "paren_criteria": "Laptop score",
+      "sub_criteria": ["ips", "keyboard_backlight", "weight"]
+    },
+    {
+      "id": "ips",
+      "paren_criteria": "design",
+      "higher_better": true
+    },
+    {
+      "id": "keyboard_backlight",
+      "paren_criteria": "design",
+      "higher_better": true
+    },
+    {
+      "id": "weight",
+      "paren_criteria": "design",
+      "higher_better": false
+    },
+    {
+      "id": "performance",
+      "higher_better": true,
+      "paren_criteria": "Laptop score",
+      "sub_criteria": ["ram", "storage", "battery_life"]
+    },
+    {
+      "id": "ram",
+      "paren_criteria": "performance",
+      "higher_better": true
+    },
+    {
+      "id": "storage",
+      "paren_criteria": "performance",
+      "higher_better": true
+    },
+    {
+      "id": "battery_life",
+      "paren_criteria": "performance",
+      "higher_better": true
+    }
+  ],
+  "pairwise_comparisons": [
+    ["deisgn", "cost", 0],
+    ["cost", "performance", 0],
+    ["performance", "design", 0],
+    ["screen", "keyboard", 0],
+    ["screen", "weight", 0],
+    ["keyboard", "weight", 0],
+    ["ram", "storage", 0],
+    ["storage", "battery_life", 0],
+    ["ram", "battery_life", 0]
+  ]
+}
