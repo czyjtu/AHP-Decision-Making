@@ -1,7 +1,7 @@
 import numpy as np
 from ..base.mcda import MCDA, A
 from ..base.criterium import Criterium
-from typing import is_typeddict, Dict, List
+from typing import Dict, List
 
 
 class ComprehensionMatrix:
@@ -27,8 +27,8 @@ class ComprehensionMatrix:
 
     def calculate_weights(self):
         matrix = np.array(self.matrix)
-        sum = sum(matrix.reshape(-1))
-        self.weights = sum(matrix) / sum
+        suma = sum(matrix.reshape(-1))
+        self.weights = sum(matrix) / suma
 
     def CR(self) -> float:
         self.complete()
@@ -85,7 +85,7 @@ def choice_list2matrix(choices: List[List]) -> np.matrix:
 
 def num_of_points(N: int) -> int:
     n = 1
-    while n < N:
+    while n <= N:
         if n * (n - 1) / 2 == N:
             return n
         n += 1
