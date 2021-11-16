@@ -4,7 +4,7 @@ from typing import Sequence, Union
 
 @dataclass(frozen=True)
 class Criterium:
-    id: Union[str, int] = field(repr=True, hash=True)
+    id: str = field(repr=True, hash=True)
     higher_better: bool
     is_leaf: bool = field(init=False)
     is_root: bool = field(init=False)

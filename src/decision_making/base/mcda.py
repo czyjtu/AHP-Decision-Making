@@ -26,3 +26,11 @@ class MCDA(ABC):
         :return priority: return float in range[0, 1] representing priority of the given criterium
         """
         pass 
+
+
+class MockedModel(MCDA):
+    def priority_of(self, c: Criterium) -> float:
+        return 0.3333 
+    
+    def get_alternative_value(self, alternative: A, criterium: Criterium) -> float:
+        return alternative[criterium.id]

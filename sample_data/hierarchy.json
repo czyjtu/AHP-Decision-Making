@@ -46,17 +46,34 @@
       "id": "battery_life",
       "paren_criteria": "performance",
       "higher_better": true
+    },
+    {
+      "id": "cost",
+      "paren_criteria": "Laptop score",
+      "higher_better": true
     }
   ],
   "pairwise_comparisons": [
-    ["deisgn", "cost", 0],
-    ["cost", "performance", 0],
-    ["performance", "design", 0],
-    ["screen", "keyboard", 0],
-    ["screen", "weight", 0],
-    ["keyboard", "weight", 0],
-    ["ram", "storage", 0],
-    ["storage", "battery_life", 0],
-    ["ram", "battery_life", 0]
+    ["deisgn", "cost", 1],
+    ["cost", "performance", 1],
+    ["performance", "design", 1],
+    ["screen", "keyboard", 1],
+    ["screen", "weight", 1],
+    ["keyboard", "weight", 1],
+    ["ram", "storage", 1],
+    ["storage", "battery_life", 1],
+    ["ram", "battery_life", 1]
+  ],
+  "alternatives": [
+    {
+      "id": "Laptop1",
+      "ram": 16,
+      "storage": 512,
+      "ips": true,
+      "keyboard_backlight": true,
+      "weight": 1.85,
+      "battery_life": 4,
+      "cost": 4999.99
+    }
   ]
 }
