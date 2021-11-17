@@ -99,15 +99,8 @@ class AHP(MCDA):
             self.alternative_comprehension[cr_id].CR()
 
     def priority_of(self, c: Criterium) -> float:
-        return self.weights[c.id]
+        return self.weights[c.id] if not c.is_root else 1
 
-    def __get_single_alternative_value(self, alternative: Dict, criterium: Criterium) -> float:
-        if not criterium.is_leaf:
-            return np.array(
-                map(lambda x: self.get_alternative_value(alternative, self.criteria_dict[x]), criterium.sub_criteria)) @ \
-                   self.matrices[criterium.id].weights
-        else:
-            return alternative[criterium.id]
 
     def get_alternative_value(self, alternative:A, criterium:Criterium) -> float:
         return self.alternative_comprehension[criterium.id].weights[self.alternative_labels.index(alternative['id'])]
@@ -139,7 +132,7 @@ def comp_list2matrix(choices: List[List]) -> np.matrix:
 
 def num_of_points(N: int) -> int:
     n = 1
-    while n <= N:
+    while n <= N + 1:
         if n * (n - 1) / 2 == N:
             return n
         n += 1

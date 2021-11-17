@@ -22,6 +22,7 @@ class Hierarchy:
         score = 0 
         for sub_id in criterium.sub_criteria:
             sub_score = self.rank_wrt_criterium(alternative, self.criteria[sub_id], model)
+            
             score += model.priority_of(criterium) * sub_score 
         return score * model.priority_of(criterium)
 
