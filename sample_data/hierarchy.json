@@ -8,72 +8,117 @@
     {
       "id": "design",
       "higher_better": true,
-      "paren_criteria": "Laptop score",
+      "parent_criterium": "Laptop score",
       "sub_criteria": ["ips", "keyboard_backlight", "weight"]
     },
     {
       "id": "ips",
-      "paren_criteria": "design",
+      "parent_criterium": "design",
       "higher_better": true
     },
     {
       "id": "keyboard_backlight",
-      "paren_criteria": "design",
+      "parent_criterium": "design",
       "higher_better": true
     },
     {
       "id": "weight",
-      "paren_criteria": "design",
+      "parent_criterium": "design",
       "higher_better": false
     },
     {
       "id": "performance",
       "higher_better": true,
-      "paren_criteria": "Laptop score",
+      "parent_criterium": "Laptop score",
       "sub_criteria": ["ram", "storage", "battery_life"]
     },
     {
       "id": "ram",
-      "paren_criteria": "performance",
+      "parent_criterium": "performance",
       "higher_better": true
     },
     {
       "id": "storage",
-      "paren_criteria": "performance",
+      "parent_criterium": "performance",
       "higher_better": true
     },
     {
       "id": "battery_life",
-      "paren_criteria": "performance",
+      "parent_criterium": "performance",
       "higher_better": true
     },
     {
       "id": "cost",
-      "paren_criteria": "Laptop score",
-      "higher_better": true
+      "parent_criterium": "Laptop score",
+      "higher_better": false
     }
   ],
   "pairwise_comparisons": [
-    ["deisgn", "cost", 1],
-    ["cost", "performance", 1],
+    ["cost", ,"design", 2],
+    ["cost", "performance", 4],
     ["performance", "design", 1],
-    ["screen", "keyboard", 1],
-    ["screen", "weight", 1],
-    ["keyboard", "weight", 1],
+    ["ips", "keyboard_backlight", 1],
+    ["ips", "weight", 1],
+    ["keyboard_backlight", "weight", 1],
     ["ram", "storage", 1],
     ["storage", "battery_life", 1],
     ["ram", "battery_life", 1]
   ],
+
+  "needs": [
+    ["ram", 16]
+  ],
+
   "alternatives": [
     {
-      "id": "Laptop1",
+      "id": "LENOVO IdeaPad 5 14IIL05 14\"",
+      "ram": 16,
+      "storage": 1000,
+      "ips": false,
+      "keyboard_backlight": false,
+      "weight": 1.41,
+      "battery_life": 4,
+      "cost": 2899
+    },
+    {
+      "id": "ASUS Rog Strix G15 G513IE 15.6\"",
+      "ram": 20,
+      "storage": 512,
+      "ips": true,
+      "keyboard_backlight": true,
+      "weight": 2.1,
+      "battery_life": 9,
+      "cost": 4699.99
+    },
+    {
+      "id": "HP 15s-eq1125nw 15,6\"",
+      "ram": 8,
+      "storage": 512,
+      "ips": false,
+      "keyboard_backlight": false,
+      "weight": 1.74,
+      "battery_life": 7,
+      "cost": 2499
+    },
+    {
+      "id": "LENOVO IdeaPad 3 14ADA05 14\"",
+      "ram": 8,
+      "storage": 256,
+      "ips": false,
+      "keyboard_backlight": false,
+      "weight": 1.85,
+      "battery_life": 5,
+      "cost": 1899
+    },
+    {
+      "id": "LENOVO IdeaPad 5 14ARE05 14\"",
       "ram": 16,
       "storage": 512,
       "ips": true,
       "keyboard_backlight": true,
-      "weight": 1.85,
-      "battery_life": 4,
-      "cost": 4999.99
+      "weight": 1.52,
+      "battery_life": 3,
+      "cost": 2899
     }
   ]
 }

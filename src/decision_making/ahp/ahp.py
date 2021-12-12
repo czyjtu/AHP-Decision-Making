@@ -67,12 +67,24 @@ class ComprehensionMatrix:
 
 def compere(l: List[Dict], criteria_id) -> List[List]:
     result=[]
-    for i in range(len(l) - 1):
-        for j in range(i+1, len(l)):
-            result.append([l[i]['id'], l[j]['id'], l[i][criteria_id] / l[j][criteria_id]])
+    if type(l[0][criteria_id]) == bool:
+        for i in range(len(l) - 1):
+            for j in range(i + 1, len(l)):
+                result.append([l[i]['id'], l[j]['id'], comp_bool(l[j][criteria_id], l[i][criteria_id])])
+    else:
+        for i in range(len(l) - 1):
+            for j in range(i+1, len(l)):
+                result.append([l[i]['id'], l[j]['id'], l[j][criteria_id] / l[i][criteria_id]])
 
     return result
 
+def comp_bool(x, y):
+    if (not x and not y) or (x and y):
+        return 1
+    elif x:
+        return 2
+    else:
+        return 1/2
 
 class AHP(MCDA):
     def __init__(self, criteria: List[Criterium], comprehension_list: List[List], alternative_list: List[Dict]):
@@ -103,7 +115,13 @@ class AHP(MCDA):
 
 
     def get_alternative_value(self, alternative:A, criterium:Criterium) -> float:
-        return self.alternative_comprehension[criterium.id].weights[self.alternative_labels.index(alternative['id'])]
+        x = self.alternative_comprehension[criterium.id].weights[self.alternative_labels.index(alternative['id'])]
+        # print(x)
+        if criterium.higher_better:
+            return x
+        else:
+
+            return 1 - x
 
 
 def choice_list2matrix(choices: List[List]) -> np.matrix:
