@@ -6,17 +6,16 @@ from typing import Dict, List, Mapping
 
 
 class AHP(MCDA):
-    def __init__(self, criteria: List[Criterium], alternative_list: List[Dict], criteria_comp: List[List], alter_comp: Mapping[str, List[List]]):
-        self.criteria = criteria
-        self.criteria_dict: Dict[Criterium] = {cr.id: cr for cr in criteria}
+    def __init__(self, root_criterium: List[Criterium], criteria_comp: List[List], alter_comp: Mapping[str, List[List]]):
+        self.root_criterium = root_criterium
+        self.criteria_dict = dict()
+        self.root_criterium.apply(lambda c: self.criteria_dict.update({c.id: c}))
         self.criteria_matrices = self._criteria_matrices(criteria_comp)
-        self.alternatives_matrices = self._alternative_matrices(alter_comp) 
-         # self.CRs = {ids: matrix.CR() for ids, matrix in self.matrices.items()}
+        self.alternatives_matrices = self._alternative_matrices(alter_comp)
 
 
-        
     def _criteria_matrices(self, criteria_comp: List[List]) -> Mapping[str, ComprehensionMatrix]:
-        sorted_comprehensions: Dict[List[List]] = {p.id: [] for p in self.criteria if not p.is_leaf}
+        sorted_comprehensions: Dict[List[List]] = {p.id: [] for p in self.criteria_dict.values() if not p.is_leaf}
         for com in criteria_comp:
             sorted_comprehensions[self.criteria_dict[com[0]].parent_criterium].append(com)
         return {parent_id: ComprehensionMatrix(comparisons) for parent_id, comparisons in sorted_comprehensions.items()}
