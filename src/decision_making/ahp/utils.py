@@ -61,3 +61,7 @@ def comp_bool(x, y):
 
 def no_zero_index(l) -> set:
     return {i for i in range(len(l)) if l[i] != 0}
+
+
+def gmean(x: np.ndarray):
+    return np.exp(np.log(x).mean(axis=1))

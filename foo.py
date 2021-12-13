@@ -1,8 +1,9 @@
-from itertools import combinations
-from string import ascii_letters 
+import numpy as np 
 
 
+a = np.array([
+    [1, 2, 3],
+    [1, 2, 3]
+])
 
-names = list(ascii_letters[:4])
-scores = range(6)
-print(list(zip(list(combinations(names ,2)), scores)))
+print(a.mean(0))

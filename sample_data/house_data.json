@@ -1,0 +1,92 @@
+{
+  "criteria": {
+    "id": "score",
+    "sub_criteria": [
+      { "id": "price" },
+      { "id": "size" },
+      { "id": "transportation" },
+      { "id": "neighbourhood" },
+      { "id": "age" },
+      { "id": "yard" },
+      { "id": "facilities" },
+      { "id": "conditions" }
+    ]
+  },
+  "alternatives": [
+    { "id": "house 1" },
+    { "id": "house 2" },
+    { "id": "house 3" }
+  ],
+  "criteria_comparisons": [
+    ["price", "size", 4],
+    ["price", "transportation", 7],
+    ["price", "neighbourhood", 5],
+    ["price", "age", 8],
+    ["price", "yard", 6],
+    ["price", "facilities", 6],
+    ["price", "conditions", 2],
+    ["size", "transportation", 5],
+    ["size", "neighbourhood", 3],
+    ["size", "age", 7],
+    ["size", "yard", 6],
+    ["size", "facilities", 6],
+    ["size", "conditions", 0.3333333333333333],
+    ["transportation", "neighbourhood", 0.3333333333333333],
+    ["transportation", "age", 5],
+    ["transportation", "yard", 3],
+    ["transportation", "facilities", 3],
+    ["transportation", "conditions", 0.2],
+    ["neighbourhood", "age", 6],
+    ["neighbourhood", "yard", 3],
+    ["neighbourhood", "facilities", 4],
+    ["neighbourhood", "conditions", 0.5],
+    ["age", "yard", 0.3333333333333333],
+    ["age", "facilities", 0.25],
+    ["age", "conditions", 0.14285714285714285],
+    ["yard", "facilities", 0.5],
+    ["yard", "conditions", 0.2],
+    ["facilities", "conditions", 0.2]
+  ],
+  "alternatives_comparisons": {
+    "price": [
+      ["house 1", "house 2", 0.14285714285714285],
+      ["house 1", "house 3", 0.2],
+      ["house 2", "house 3", 3]
+    ],
+    "size": [
+      ["house 1", "house 2", 5],
+      ["house 1", "house 3", 9],
+      ["house 2", "house 3", 4]
+    ],
+    "transportation": [
+      ["house 1", "house 2", 4],
+      ["house 1", "house 3", 0.2],
+      ["house 2", "house 3", 0.1111111111111111]
+    ],
+    "neighbourhood": [
+      ["house 1", "house 2", 9],
+      ["house 1", "house 3", 4],
+      ["house 2", "house 3", 0.25]
+    ],
+    "age": [
+      ["house 1", "house 2", 1],
+      ["house 1", "house 3", 1],
+      ["house 2", "house 3", 1]
+    ],
+    "yard": [
+      ["house 1", "house 2", 6],
+      ["house 1", "house 3", 4],
+      ["house 2", "house 3", 0.3333333333333333]
+    ],
+    "facilities": [
+      ["house 1", "house 2", 9],
+      ["house 1", "house 3", 6],
+      ["house 2", "house 3", 0.3333333333333333]
+    ],
+    "conditions": [
+      ["house 1", "house 2", 0.5],
+      ["house 1", "house 3", 0.5],
+      ["house 2", "house 3", 1]
+    ]
+  }
+}

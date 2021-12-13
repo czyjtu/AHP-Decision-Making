@@ -1,4 +1,4 @@
-from src.decision_making.ahp.ranking_method import RankingMethod, evm_weights
+from src.decision_making.ahp.ranking_method import RankingMethod, evm_weights, gmm_weights
 from src.decision_making.base import Preference
 from src.decision_making.ahp.utils import no_zero_index
 from itertools import chain
@@ -8,7 +8,10 @@ from typing import List, Tuple
 
 class ComprehensionMatrix:
     RI = [0, 0, 0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49]
-    ranking_methods = {RankingMethod.EVM: evm_weights}
+    ranking_methods = {
+        RankingMethod.EVM: evm_weights,
+        RankingMethod.GMM: gmm_weights
+        }
 
     def __init__(self, comparison_list: List[Tuple[str, str, Preference]], ranking_method: RankingMethod=RankingMethod.EVM):
         self.index_of = self._build_mapping(comparison_list)
@@ -23,7 +26,7 @@ class ComprehensionMatrix:
     
     def _build_matrix(self, comp_list: List[Tuple[str, str, Preference]]):
         n = len(self.index_of)
-        M = np.zeros((n, n))
+        M = np.ones((n, n))
         for a, b, pref in comp_list:
             M[self.index_of[a]][self.index_of[b]] = pref
             M[self.index_of[b]][self.index_of[a]] = 1 / pref
