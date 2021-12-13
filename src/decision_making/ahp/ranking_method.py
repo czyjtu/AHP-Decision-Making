@@ -3,8 +3,8 @@ import numpy as np
 from src.decision_making.ahp.utils import gmean
 
 class RankingMethod(Enum):
-    EVM = auto()
-    GMM = auto()
+    EVM = "EVM"
+    GMM = "GMM"
 
 
 def evm_weights(m: np.ndarray) -> np.ndarray:

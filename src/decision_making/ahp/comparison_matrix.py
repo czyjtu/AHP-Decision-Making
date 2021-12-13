@@ -1,5 +1,4 @@
 from src.decision_making.ahp.ranking_method import RankingMethod, evm_weights, gmm_weights
-from src.decision_making.base import Preference
 from src.decision_making.ahp.utils import no_zero_index
 from itertools import chain
 import numpy as np
@@ -13,7 +12,7 @@ class ComprehensionMatrix:
         RankingMethod.GMM: gmm_weights
         }
 
-    def __init__(self, comparison_list: List[Tuple[str, str, Preference]], ranking_method: RankingMethod=RankingMethod.EVM):
+    def __init__(self, comparison_list: List[Tuple[str, str, float]], ranking_method: RankingMethod=RankingMethod.EVM):
         self.index_of = self._build_mapping(comparison_list)
         self.matrix = self._build_matrix(comparison_list)
         self.weights = self._calculate_weights(ranking_method)
@@ -24,7 +23,7 @@ class ComprehensionMatrix:
         return self.weights.get(key, None)
 
     
-    def _build_matrix(self, comp_list: List[Tuple[str, str, Preference]]):
+    def _build_matrix(self, comp_list: List[Tuple[str, str, float]]):
         n = len(self.index_of)
         M = np.ones((n, n))
         for a, b, pref in comp_list:
@@ -34,7 +33,7 @@ class ComprehensionMatrix:
 
 
     @staticmethod
-    def _build_mapping(comp_list: List[Tuple[str, str, Preference]]):
+    def _build_mapping(comp_list: List[Tuple[str, str, float]]):
         ids = set(chain.from_iterable([comp[:2] for comp in comp_list]))
         return {id_: idx for idx, id_ in enumerate(ids)}
 

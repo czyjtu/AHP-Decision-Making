@@ -71,8 +71,8 @@ def data(criteria, alternatives, criteria_comparisons, alternatives_comparisons)
 
 
 def test_foo(client, data):
-    response = client.get('/ahp/pairwise', json=data)
-    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+    response = client.get('/ahp/pairwise', json=data, query_string={"ranking_method": "EVM"})
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code} with message: {response.data}"
     ranked = response.get_json()['ranked_alternatives']
     assert ranked == [[{"id":"house 2"},0.369],[{"id":"house 1"},0.346],[{"id":"house 3"},0.285]], \
         f"Invalid ranking. got {ranked}"
