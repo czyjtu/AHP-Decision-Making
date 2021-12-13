@@ -5,14 +5,14 @@ from src.decision_making.base.mcda import MCDA, A
 
 
 class Hierarchy:
-    def __init__(self, criteria:Sequence[Criterium]):
-        self.criteria = {cr.id: cr for cr in criteria} 
-        self.root_criteria = next(filter(lambda c: c.is_root, criteria))
+    def __init__(self, root_criterium: Criterium):
+        self.root_criterium = root_criterium
+        self.criteria = dict()
+        self.root_criterium.apply(lambda c: self.criteria.update({c.id: c}))
 
 
     def rank_alternatives(self, alternatives:Sequence[A],  model:MCDA) -> Sequence[Tuple[A, float]]:
-        print(alternatives)
-        ranked = list(map(lambda a: (a, self.rank_wrt_criterium(a, self.root_criteria, model)), alternatives))
+        ranked = list(map(lambda a: (a, self.rank_wrt_criterium(a, self.root_criterium, model)), alternatives))
         return sorted(ranked, key=lambda item: -item[1])
 
 
@@ -20,9 +20,8 @@ class Hierarchy:
         if criterium.is_leaf:
             return model.get_alternative_value(alternative, criterium) * model.priority_of(criterium)
         score = 0 
-        for sub_id in criterium.sub_criteria:
-            sub_score = self.rank_wrt_criterium(alternative, self.criteria[sub_id], model)
-            
+        for sub in criterium.sub_criteria:
+            sub_score = self.rank_wrt_criterium(alternative, sub, model)
             score += model.priority_of(criterium) * sub_score 
         return score * model.priority_of(criterium)
 
