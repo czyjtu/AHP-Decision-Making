@@ -26,7 +26,7 @@ class AHP(MCDA):
 
 
     def priority_of(self, c: Criterium) -> float:
-        return 1 if c.is_root else self.criteria_matrices[c.parent_criterium][c.id]
+        return 1 if c.parent_criterium is None else self.criteria_matrices[c.parent_criterium][c.id]
 
 
     def get_alternative_value(self, alternative:A, criterium:Criterium) -> float:

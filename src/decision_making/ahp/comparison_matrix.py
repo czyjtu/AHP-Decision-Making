@@ -12,7 +12,7 @@ class ComprehensionMatrix:
         self.index_of = self._build_mapping(comparison_list)
         self.matrix = self._build_matrix(comparison_list)
         self.weights = self._calculate_weights()
-        self.inconsistency_index = self.calculate_inconsistency()
+        # self.inconsistency_index = self.calculate_inconsistency()
     
 
     def __getitem__(self, key):
@@ -23,8 +23,8 @@ class ComprehensionMatrix:
         n = len(self.index_of)
         M = np.zeros((n, n))
         for a, b, pref in comp_list:
-            M[self.index_of[a]][self.index_of[b]] = pref.value
-            M[self.index_of[b]][self.index_of[a]] = 1 / pref.value
+            M[self.index_of[a]][self.index_of[b]] = pref
+            M[self.index_of[b]][self.index_of[a]] = 1 / pref
         return M
 
 

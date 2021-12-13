@@ -1,53 +1,46 @@
 {
-  "criteria": [
-    {
-      "id": "score",
-      "higher_better": true,
-      "sub_criteria": ["design", "cost", "performance"]
-    },
-    {
-      "id": "design",
-      "higher_better": true,
-      "parent_criterium": "score",
-      "sub_criteria": ["ips", "keyboard_backlight", "weight"]
-    },
-    {
-      "id": "ips",
-      "parent_criterium": "design",
-      "higher_better": true
-    },
-    {
-      "id": "keyboard_backlight",
-      "parent_criterium": "design",
-      "higher_better": true
-    },
-    {
-      "id": "weight",
-      "parent_criterium": "design",
-      "higher_better": false
-    },
-    {
-      "id": "performance",
-      "higher_better": true,
-      "parent_criterium": "score",
-      "sub_criteria": ["ram", "storage"]
-    },
-    {
-      "id": "ram",
-      "parent_criterium": "performance",
-      "higher_better": true
-    },
-    {
-      "id": "storage",
-      "parent_criterium": "performance",
-      "higher_better": true
-    },
-    {
-      "id": "cost",
-      "parent_criterium": "score",
-      "higher_better": true
-    }
-  ],
+  "criteria": {
+    "id": "score",
+    "higher_better": true,
+    "sub_criteria": [
+      {
+        "id": "design",
+        "higher_better": true,
+        "sub_criteria": [
+          {
+            "id": "ips",
+            "higher_better": true
+          },
+          {
+            "id": "keyboard_backlight",
+            "higher_better": true
+          },
+          {
+            "id": "weight",
+            "higher_better": false
+          }
+        ]
+      },
+      {
+        "id": "cost",
+        "higher_better": true
+      },
+      {
+        "id": "performance",
+        "higher_better": true,
+        "sub_criteria": [
+          {
+            "id": "ram",
+            "higher_better": true
+          },
+          {
+            "id": "storage",
+            "higher_better": true
+          }
+        ]
+      }
+    ]
+  },
   "pairwise_comparisons": [
     ["design", "cost", 4],
     ["performance", "cost", 6],

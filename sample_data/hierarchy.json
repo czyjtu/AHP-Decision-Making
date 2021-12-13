@@ -54,7 +54,7 @@
     }
   ],
   "pairwise_comparisons": [
-    ["cost", ,"design", 2],
+    ["cost", "design", 2],
     ["cost", "performance", 4],
     ["performance", "design", 1],
     ["ips", "keyboard_backlight", 1],
