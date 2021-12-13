@@ -1,3 +1,4 @@
+from src.decision_making.ahp.ranking_method import RankingMethod, evm_weights
 from src.decision_making.base import Preference
 from src.decision_making.ahp.utils import no_zero_index
 from itertools import chain
@@ -7,11 +8,12 @@ from typing import List, Tuple
 
 class ComprehensionMatrix:
     RI = [0, 0, 0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49]
+    ranking_methods = {RankingMethod.EVM: evm_weights}
 
-    def __init__(self, comparison_list: List[Tuple[str, str, Preference]]):
+    def __init__(self, comparison_list: List[Tuple[str, str, Preference]], ranking_method: RankingMethod=RankingMethod.EVM):
         self.index_of = self._build_mapping(comparison_list)
         self.matrix = self._build_matrix(comparison_list)
-        self.weights = self._calculate_weights()
+        self.weights = self._calculate_weights(ranking_method)
         # self.inconsistency_index = self.calculate_inconsistency()
     
 
@@ -34,10 +36,8 @@ class ComprehensionMatrix:
         return {id_: idx for idx, id_ in enumerate(ids)}
 
     
-    def _calculate_weights(self):
-        matrix = np.array(self.matrix)
-        suma = sum(matrix.reshape(-1))
-        weights = sum(matrix) / suma
+    def _calculate_weights(self, ranking_method: RankingMethod):
+        weights = self.ranking_methods[ranking_method](self.matrix)
         return {id_: weights[idx] for id_, idx in self.index_of.items()}
 
 

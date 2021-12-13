@@ -1,12 +1,6 @@
 import numpy as np 
 from typing import List, Dict
 
-def evm_weights(m: np.ndarray) -> np.ndarray:
-    eig_val, eig_vec = map(np.real, np.linalg.eig(m))
-    max_index = np.argmax(eig_val)
-    weights = eig_vec[:, max_index]
-    return weights / np.sum(weights)
-
 
 def choice_list2matrix(choices: List[List]) -> np.matrix:
     n = num_of_points(len(choices))

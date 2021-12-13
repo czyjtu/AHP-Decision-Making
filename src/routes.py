@@ -7,7 +7,9 @@ from http import HTTPStatus
 import dacite
 from dataclasses import asdict
 
+
 ahp_blueprint = Blueprint('ahp', __name__)
+
 
 @ahp_blueprint.route('/ahp/pairwise', methods=['GET'])
 def ahp():
@@ -24,5 +26,5 @@ def ahp():
     hierarchy_tree = Hierarchy(root_criterium)
     decision_model = AHP(root_criterium, criteria_comparisons, data['alternatives_comparisons'])
     ranked = hierarchy_tree.rank_alternatives(data['alternatives'], decision_model)
-    result = list(map(tuple, ranked))
-    return {"ranked alternatives": result}
+    result = [[a, round(score, 3)] for a, score in ranked]
+    return {"ranked_alternatives": result}
