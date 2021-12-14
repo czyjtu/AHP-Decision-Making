@@ -1,3 +1,4 @@
 Flask==2.0.2  
 numpy==1.21.4
 dacite==1.6.0
+pytest==6.2.5

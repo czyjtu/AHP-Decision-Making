@@ -1,6 +1,11 @@
 import math
 
 import numpy as np
+from src.decision_making.ahp.ranking_method import RankingMethod
+from src.decision_making.ahp.utils import choice_list2matrix, comp_list2matrix
+from src.decision_making.ahp.comparison_matrix import ComprehensionMatrix
+from src.decision_making.base import MCDA, A, Preference, Criterium
+from typing import Dict, List, Mapping
 from ..base.mcda import MCDA, A
 from ..base.criterium import Criterium
 from ..base.preference import Preference
@@ -121,73 +126,34 @@ class ComprehensionMatrix:
         CR = self.CI() / self.RI[len(self.matrix)]
         return CR
 
-    def __repr__(self):
-        return repr(self.matrix)
-
-
-def compere(l: List[Dict], criteria_id) -> List[List]:
-    result = []
-    if type(l[0][criteria_id]) == bool:
-        for i in range(len(l) - 1):
-            for j in range(i + 1, len(l)):
-                result.append([l[i]['id'], l[j]['id'], comp_bool(l[j][criteria_id], l[i][criteria_id])])
-    else:
-        for i in range(len(l) - 1):
-            for j in range(i + 1, len(l)):
-                result.append([l[i]['id'], l[j]['id'], l[j][criteria_id] / l[i][criteria_id]])
-
-    return result
-
-
-def comp_bool(x, y):
-    if (not x and not y) or (x and y):
-        return 1
-    elif x:
-        return 2
-    else:
-        return 1 / 2
-
 
 class AHP(MCDA):
-    def __init__(self, criteria: List[Criterium], comprehension_list: List[List], alternative_list: List[Dict]):
-        self.criteria_dict: Dict[Criterium] = {cr.id: cr for cr in criteria}
+    def __init__(self, root_criterium: List[Criterium], criteria_comp: List[List], alter_comp: Mapping[str, List[List]], ranking_method: RankingMethod=RankingMethod.EVM):
+        self.ranking_method = ranking_method
+        self.root_criterium = root_criterium
+        self.criteria_dict = dict()
+        self.root_criterium.apply(lambda c: self.criteria_dict.update({c.id: c}))
+        self.criteria_matrices = self._criteria_matrices(criteria_comp)
+        self.alternatives_matrices = self._alternative_matrices(alter_comp)
 
-        sorted_comprehensions: Dict[List[List]] = {p.id: [] for p in criteria if not p.is_leaf}
-        for com in comprehension_list:
+
+    def _criteria_matrices(self, criteria_comp: List[List]) -> Mapping[str, ComprehensionMatrix]:
+        sorted_comprehensions: Dict[List[List]] = {p.id: [] for p in self.criteria_dict.values() if not p.is_leaf}
+        for com in criteria_comp:
             sorted_comprehensions[self.criteria_dict[com[0]].parent_criterium].append(com)
-        self.matrices = {ids: ComprehensionMatrix(choice_list2matrix(x)) for ids, x in sorted_comprehensions.items()}
+        return {parent_id: ComprehensionMatrix(comparisons, self.ranking_method) for parent_id, comparisons in sorted_comprehensions.items()}
 
 
-        self.weights = {}
-        for ids in sorted_comprehensions.keys():
-            sub_criteria_list = list(sorted(self.criteria_dict[ids].sub_criteria))
-            for i in range(len(sub_criteria_list)):
-                self.weights[sub_criteria_list[i]] = self.matrices[ids].weights[i]
+    def _alternative_matrices(self, alter_comp: List[List]) -> Mapping[str, ComprehensionMatrix]:
+        return {criteria_id: ComprehensionMatrix(comparisons, self.ranking_method) for criteria_id, comparisons in alter_comp.items()}
 
-        self.alternative_dict: Dict[Dict] = {a['id']: a for a in alternative_list}
-        self.alternative_labels = sorted(list(map(lambda x: x['id'], alternative_list)))
-        self.alternative_comprehension = dict()
-        for cr_id in [cr.id for cr in criteria if cr.is_leaf]:
-            self.alternative_comprehension[cr_id] = ComprehensionMatrix(
-                comp_list2matrix(compere(alternative_list, cr_id)))
-            self.alternative_comprehension[cr_id].CR()
 
     def priority_of(self, c: Criterium) -> float:
-        return self.weights[c.id] if not c.is_root else 1
+        return 1 if c.parent_criterium is None else self.criteria_matrices[c.parent_criterium][c.id]
 
-    def get_alternative_value(self, alternative: A, criterium: Criterium) -> float:
-        """
-        Method getting value of single alternative in comprehension matrix of given criteria
-        :param alternative:
-        :param criterium:
-        :return:
-        """
-        x = self.alternative_comprehension[criterium.id].weights[self.alternative_labels.index(alternative['id'])]
-        # print(x)
-        if criterium.higher_better:
-            return x
-        else:
-            return 1 - x
+
+    def get_alternative_value(self, alternative:A, criterium:Criterium) -> float:
+        return self.alternatives_matrices[criterium.id][alternative['id']]
 
 
 def choice_list2matrix(choices: List[List]) -> np.matrix:
@@ -242,7 +208,3 @@ def random_matrix(n, q):
 def calc_RI(n, q, mt=25):
     CIs = [ComprehensionMatrix(random_matrix(n, q)).CI() for _ in range(mt)]
     return np.mean(CIs)
-
-
-if __name__ == '__main__':
-    print(calc_RI(5, 9))
