@@ -4,15 +4,12 @@ from decision_making.ahp.ahp import AHP
 from src import app
 from src.decision_making.base import Criterium, Preference
 from src.decision_making import Hierarchy
+from src.decision_making import AHP
 from flask import request
 from http import HTTPStatus 
 import dacite
 from src.decision_making.base.mcda import MockedModel
 
-
-
-def validate_request(request):
-    pass
 
 
 @app.route('/ahp', methods=['GET'])

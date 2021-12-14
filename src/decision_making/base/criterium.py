@@ -5,7 +5,7 @@ from typing import Sequence, Union
 @dataclass(frozen=True)
 class Criterium:
     id: str = field(repr=True, hash=True)
-    higher_better: bool
+    higher_better: bool = True
     is_leaf: bool = field(init=False)
     is_root: bool = field(init=False)
     parent_criterium: Union[str, int] = field(default=None)

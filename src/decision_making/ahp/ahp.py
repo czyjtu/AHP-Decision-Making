@@ -159,13 +159,6 @@ class AHP(MCDA):
     def priority_of(self, c: Criterium) -> float:
         return self.weights[c.id] if not c.is_root else 1
 
-    def __get_single_alternative_value(self, alternative: Dict, criterium: Criterium) -> float:
-        if not criterium.is_leaf:
-            return np.array(
-                map(lambda x: self.get_alternative_value(alternative, self.criteria_dict[x]), criterium.sub_criteria)) @ \
-                   self.matrices[criterium.id].weights
-        else:
-            return alternative[criterium.id]
 
     def get_alternative_value(self, alternative:A, criterium:Criterium) -> float:
         """
