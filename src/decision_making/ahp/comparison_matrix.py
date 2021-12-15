@@ -13,21 +13,24 @@ class ComprehensionMatrix:
         RankingMethod.GMM: gmm_weights
         }
 
-    def __init__(self, comparison_list: List[Tuple[str, str, float]], ranking_method: RankingMethod=RankingMethod.EVM):
+    def __init__(self, comparison_list: List[Tuple[str, str, float]], ranking_method: RankingMethod=RankingMethod.EVM, required_size=None):
         self.index_of = self._build_mapping(comparison_list)
+        if required_size is not None:
+            assert len(self.index_of) == required_size, f"wrong number of comparisons "
         self.matrix = self._build_matrix(comparison_list)
         if self.__contain_zeros():
             self.complete_comprehensions()
         self.weights = self._calculate_weights(ranking_method)
         self.cr = self.CR()
-        self.gi = self.GI()
+        try:
+            self.gi = self.GI()
+        except AssertionError:
+            self.gi = None
         # self.inconsistency_index = self.calculate_inconsistency()
-    
 
     def __getitem__(self, key):
         return self.weights.get(key, None)
 
-    
     def _build_matrix(self, comp_list: List[Tuple[str, str, float]]):
         n = len(self.index_of)
         M = np.zeros((n, n))
@@ -66,7 +69,8 @@ class ComprehensionMatrix:
         :param y:
         :return:
         """
-        xs, ys = np.array(self.matrix)[x], np.array(self.matrix[:, y].reshape(-1))[0]
+        xs, ys = np.array(self.matrix)[x], np.array(self.matrix[:, y].reshape(-1))
+        # print(xs, ys)
         a = no_zero_index(xs).intersection(no_zero_index(ys))
         if len(a) > 0:
             return a.pop()
@@ -99,7 +103,7 @@ class ComprehensionMatrix:
                     self.matrix[x, y] = self.matrix[x, a] * self.matrix[a, y]
                     self.matrix[y, x] = 1 / self.matrix[x, y]
                     del to_complite[i]
-                    to_complite.remove((x, y))
+                    to_complite.remove((y, x))
                     t = False
                 else:
                     i += 1
@@ -124,7 +128,9 @@ class ComprehensionMatrix:
 
     def CI(self) -> float:
         sum_vec = sum(np.array(self.matrix.transpose()))
-        lambda_max = sum_vec @ self.weights
+        # print(sum_vec, self.weights)
+        w = np.array(list(self.weights.values()))
+        lambda_max = sum_vec @ w
         n = len(self.matrix)
         ci = (lambda_max - n) / (n - 1)
         return ci
@@ -135,10 +141,12 @@ class ComprehensionMatrix:
         :return:
         """
         n = len(self.matrix)
+        assert n > 2, "matrix size cannot be less than 2"
+        w = np.array(list(self.weights.values()))
         total_log_error = 0
         for i in range(n - 1):
             for j in range(i + 1, n):
-                total_log_error += log10(self.matrix[i, j] * self.weights[j] / self.weights[i]) ** 2
+                total_log_error += log10(self.matrix[i, j] * w[j] / w[i]) ** 2
 
         return total_log_error * (2 / ((n - 1) * (n - 2)))
 

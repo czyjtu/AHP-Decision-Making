@@ -73,11 +73,18 @@
       ["house 1", "house 3", 1],
       ["house 2", "house 3", 1]
     ],
-    "yard": [
+    "yard": {
+          "expert1": [
       ["house 1", "house 2", 6],
       ["house 1", "house 3", 4],
       ["house 2", "house 3", 0.3333333333333333]
     ],
+    "expert2": [
+      ["house 1", "house 2", 3],
+      ["house 1", "house 3", 7],
+      ["house 2", "house 3", 0.5]
+    ]
+    },
     "facilities": [
       ["house 1", "house 2", 9],
       ["house 1", "house 3", 6],
