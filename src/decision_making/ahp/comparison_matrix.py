@@ -1,3 +1,4 @@
+from math import log10
 from src.decision_making.ahp.ranking_method import RankingMethod, evm_weights, gmm_weights
 from src.decision_making.ahp.utils import no_zero_index
 from itertools import chain
@@ -15,7 +16,11 @@ class ComprehensionMatrix:
     def __init__(self, comparison_list: List[Tuple[str, str, float]], ranking_method: RankingMethod=RankingMethod.EVM):
         self.index_of = self._build_mapping(comparison_list)
         self.matrix = self._build_matrix(comparison_list)
+        if self.__contain_zeros():
+            self.complete_comprehensions()
         self.weights = self._calculate_weights(ranking_method)
+        self.cr = self.CR()
+        self.gi = self.GI()
         # self.inconsistency_index = self.calculate_inconsistency()
     
 
@@ -25,7 +30,9 @@ class ComprehensionMatrix:
     
     def _build_matrix(self, comp_list: List[Tuple[str, str, float]]):
         n = len(self.index_of)
-        M = np.ones((n, n))
+        M = np.zeros((n, n))
+        for i in range(n):
+            M[i][i] = 1.
         for a, b, pref in comp_list:
             M[self.index_of[a]][self.index_of[b]] = pref
             M[self.index_of[b]][self.index_of[a]] = 1 / pref
@@ -52,39 +59,92 @@ class ComprehensionMatrix:
                 if self.matrix[i, j] != .0:
                     self.matrix[j, i] = 1 / self.matrix[i, j]
 
-
     def __comprehended_index(self, x, y):
-        a = no_zero_index(self.matrix[x]).intersection(no_zero_index(self.matrix[y]))
-        if a is not None:
-            return list(a)[0]
+        """
+        method finding index i that (x, i) and (i, y)
+        :param x:
+        :param y:
+        :return:
+        """
+        xs, ys = np.array(self.matrix)[x], np.array(self.matrix[:, y].reshape(-1))[0]
+        a = no_zero_index(xs).intersection(no_zero_index(ys))
+        if len(a) > 0:
+            return a.pop()
         else:
             return None
 
+    def __contain_zeros(self):
+        return .0 in self.matrix.reshape(-1) or 0 in self.matrix.reshape(-1)
+
+    def __zero_indexes(self):
+        return [(i, j) for i in range(len(self.matrix)) for j in range(len(self.matrix)) if self.matrix[i, j] == 0]
 
     def complete_comprehensions(self):
-        self.complete()
         t: bool = False
-        while .0 in self.matrix.reshape(-1):
-            if t: raise ValueError("incomplete matrix!")
+        to_complite = self.__zero_indexes()
+        while self.__contain_zeros():
+            if t:
+                missing = self.__missing_comperes()
+                raise ValueError(
+                    "incomplete matrix!\n"
+                    f"missing comprehensions: \n" +
+                    repr({"one of: " + str(i) for i in missing})
+                )
             t = True
-            for i in range(len(self.matrix)):
-                for j in range(len(self.matrix)):
-                    if self.matrix[i, j] == 0:
-                        a = self.__comprehended_index(i, j)
-                        if a is not None:
-                            self.matrix[i, j] = self.matrix[i, a] * self.matrix[a, j]
-                            self.matrix[j, i] = 1 / self.matrix[i, j]
-                            t = False
+            i = 0
+            while i < len(to_complite):
+                x, y = to_complite[i]
+                a = self.__comprehended_index(x, y)
+                if a is not None:
+                    self.matrix[x, y] = self.matrix[x, a] * self.matrix[a, y]
+                    self.matrix[y, x] = 1 / self.matrix[x, y]
+                    del to_complite[i]
+                    to_complite.remove((x, y))
+                    t = False
+                else:
+                    i += 1
 
+    def __sub_graphs(self):
+        missing = []
+        indexes = {i for i in range(len(self.matrix))}
+        while len(indexes) > 0:
+            i = indexes.pop()
+            a = no_zero_index(np.array(self.matrix)[i])
+            missing.append(list(a))
+            indexes = indexes.difference(a)
+        return missing
 
-    def calculate_inconsistency(self) -> float:
-        self.complete()
-        self.calculate_weights()
+    def __missing_comperes(self):
+        sub_graphs = self.__sub_graphs()
+        print(sub_graphs)
+        missing = []
+        for i in range(len(sub_graphs) - 1):
+            missing.append({(x, y) for x in sub_graphs[i] for y in sum(sub_graphs[i + 1:], [])})
+        return missing
+
+    def CI(self) -> float:
         sum_vec = sum(np.array(self.matrix.transpose()))
         lambda_max = sum_vec @ self.weights
         n = len(self.matrix)
-        CI = (lambda_max - n) / (n - 1)
-        CR = CI / self.RI[n]
+        ci = (lambda_max - n) / (n - 1)
+        return ci
+
+    def GI(self):
+        """
+        Geometric Consistency Index
+        :return:
+        """
+        n = len(self.matrix)
+        total_log_error = 0
+        for i in range(n - 1):
+            for j in range(i + 1, n):
+                total_log_error += log10(self.matrix[i, j] * self.weights[j] / self.weights[i]) ** 2
+
+        return total_log_error * (2 / ((n - 1) * (n - 2)))
+
+    def CR(self) -> float:
+        # Consistency ratio, defined by Saaty
+        CR = self.CI() / self.RI[len(self.matrix)]
         return CR
 
 

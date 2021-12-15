@@ -1,5 +1,5 @@
 import numpy as np 
-from typing import List, Dict
+from typing import List, Dict, Set
 
 
 def choice_list2matrix(choices: List[List]) -> np.matrix:
@@ -61,6 +61,16 @@ def comp_bool(x, y):
 
 def no_zero_index(l) -> set:
     return {i for i in range(len(l)) if l[i] != 0}
+
+def mix(s1, s2) -> Set[Set]:
+    return {{i, j} for i in s1 for j in s2}
+
+
+def random_matrix(n, q):
+    m = np.random.random((n, n)) * q + 1
+    m = np.matrix(list(map(lambda x: list(map(lambda x1: float(int(x1)), x)), m)))
+    return m
+
 
 
 def gmean(x: np.ndarray):
