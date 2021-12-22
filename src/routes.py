@@ -1,5 +1,6 @@
 from src.decision_making.base import Criterium, Preference
 from src.decision_making.ahp.ranking_method import RankingMethod
+from src.decision_making.ahp.comparison_matrix import MissingComparisonsError
 from src.decision_making import Hierarchy
 from src.decision_making import AHP
 from flask import request, Blueprint
@@ -28,7 +29,13 @@ def ahp():
     preference_converter = lambda comp: comp[:2] + [Preference(comp[2])]
     criteria_comparisons = list(data['criteria_comparisons'])
     hierarchy_tree = Hierarchy(root_criterium)
-    decision_model = AHP(root_criterium, criteria_comparisons, data['alternatives_comparisons'], ranking_method)
-    ranked = hierarchy_tree.rank_alternatives(data['alternatives'], decision_model)
+    try:
+        decision_model = AHP(root_criterium, criteria_comparisons, data['alternatives_comparisons'], ranking_method)
+        ranked = hierarchy_tree.rank_alternatives(data['alternatives'], decision_model)
+    except MissingComparisonsError as exc:
+        return f"{exc}", HTTPStatus.BAD_REQUEST
+    except AssertionError as exc:
+        return f"{exc}", HTTPStatus.BAD_REQUEST
+
     result = [[a, round(score, 3)] for a, score in ranked]
     return {"ranked_alternatives": result}

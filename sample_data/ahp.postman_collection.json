@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "fe2ffbe7-d2e8-4a0d-8cb6-9ea7369b3c56",
+		"name": "ahp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "mutiple experts",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"criteria\": {\r\n    \"id\": \"score\",\r\n    \"sub_criteria\": [\r\n      { \"id\": \"price\" },\r\n      { \"id\": \"size\" },\r\n      { \"id\": \"transportation\" },\r\n      { \"id\": \"neighbourhood\" },\r\n      { \"id\": \"age\" },\r\n      { \"id\": \"yard\" },\r\n      { \"id\": \"facilities\" },\r\n      { \"id\": \"conditions\" }\r\n    ]\r\n  },\r\n  \"alternatives\": [\r\n    { \"id\": \"house 1\" },\r\n    { \"id\": \"house 2\" },\r\n    { \"id\": \"house 3\" }\r\n  ],\r\n  \"criteria_comparisons\": [\r\n    [\"price\", \"size\", 4],\r\n    [\"price\", \"transportation\", 7],\r\n    [\"price\", \"neighbourhood\", 5],\r\n    [\"price\", \"age\", 8],\r\n    [\"price\", \"yard\", 6],\r\n    [\"price\", \"facilities\", 6],\r\n    [\"price\", \"conditions\", 2],\r\n    [\"size\", \"transportation\", 5],\r\n    [\"size\", \"neighbourhood\", 3],\r\n    [\"size\", \"age\", 7],\r\n    [\"size\", \"yard\", 6],\r\n    [\"size\", \"facilities\", 6],\r\n    [\"size\", \"conditions\", 0.3333333333333333],\r\n    [\"transportation\", \"neighbourhood\", 0.3333333333333333],\r\n    [\"transportation\", \"age\", 5],\r\n    [\"transportation\", \"yard\", 3],\r\n    [\"transportation\", \"facilities\", 3],\r\n    [\"transportation\", \"conditions\", 0.2],\r\n    [\"neighbourhood\", \"age\", 6],\r\n    [\"neighbourhood\", \"yard\", 3],\r\n    [\"neighbourhood\", \"facilities\", 4],\r\n    [\"neighbourhood\", \"conditions\", 0.5],\r\n    [\"age\", \"yard\", 0.3333333333333333],\r\n    [\"age\", \"facilities\", 0.25],\r\n    [\"age\", \"conditions\", 0.14285714285714285],\r\n    [\"yard\", \"facilities\", 0.5],\r\n    [\"yard\", \"conditions\", 0.2],\r\n    [\"facilities\", \"conditions\", 0.2]\r\n  ],\r\n  \"alternatives_comparisons\": {\r\n    \"price\": [\r\n      [\"house 1\", \"house 2\", 0.14285714285714285],\r\n      [\"house 1\", \"house 3\", 0.2],\r\n      [\"house 2\", \"house 3\", 3]\r\n    ],\r\n    \"size\": [\r\n      [\"house 1\", \"house 2\", 5],\r\n      [\"house 1\", \"house 3\", 9],\r\n      [\"house 2\", \"house 3\", 4]\r\n    ],\r\n    \"transportation\": [\r\n      [\"house 1\", \"house 2\", 4],\r\n      [\"house 1\", \"house 3\", 0.2],\r\n      [\"house 2\", \"house 3\", 0.1111111111111111]\r\n    ],\r\n    \"neighbourhood\": [\r\n      [\"house 1\", \"house 2\", 9],\r\n      [\"house 1\", \"house 3\", 4],\r\n      [\"house 2\", \"house 3\", 0.25]\r\n    ],\r\n    \"age\": [\r\n      [\"house 1\", \"house 2\", 1],\r\n      [\"house 1\", \"house 3\", 1],\r\n      [\"house 2\", \"house 3\", 1]\r\n    ],\r\n    \"yard\": {\r\n      \"expert1\": [\r\n        [\"house 1\", \"house 2\", 6],\r\n        [\"house 1\", \"house 3\", 4],\r\n        [\"house 2\", \"house 3\", 0.3333333333333333]\r\n      ],\r\n      \"expert2\": [\r\n        [\"house 1\", \"house 2\", 3],\r\n        [\"house 1\", \"house 3\", 7],\r\n        [\"house 2\", \"house 3\", 0.5]\r\n      ]\r\n    },\r\n    \"facilities\": [\r\n      [\"house 1\", \"house 2\", 9],\r\n      [\"house 1\", \"house 3\", 6],\r\n      [\"house 2\", \"house 3\", 0.3333333333333333]\r\n    ],\r\n    \"conditions\": [\r\n      [\"house 1\", \"house 2\", 0.5],\r\n      [\"house 1\", \"house 3\", 0.5],\r\n      [\"house 2\", \"house 3\", 1]\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8800/ahp/pairwise",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8800",
+					"path": [
+						"ahp",
+						"pairwise"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "simple pairwise",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"criteria\": {\r\n    \"id\": \"score\",\r\n    \"sub_criteria\": [\r\n      { \"id\": \"price\" },\r\n      { \"id\": \"size\" },\r\n      { \"id\": \"transportation\" },\r\n      { \"id\": \"neighbourhood\" },\r\n      { \"id\": \"age\" },\r\n      { \"id\": \"yard\" },\r\n      { \"id\": \"facilities\" },\r\n      { \"id\": \"conditions\" }\r\n    ]\r\n  },\r\n  \"alternatives\": [\r\n    { \"id\": \"house 1\" },\r\n    { \"id\": \"house 2\" },\r\n    { \"id\": \"house 3\" }\r\n  ],\r\n  \"criteria_comparisons\": [\r\n    [\"price\", \"size\", 4],\r\n    [\"price\", \"transportation\", 7],\r\n    [\"price\", \"neighbourhood\", 5],\r\n    [\"price\", \"age\", 8],\r\n    [\"price\", \"yard\", 6],\r\n    [\"price\", \"facilities\", 6],\r\n    [\"price\", \"conditions\", 2],\r\n    [\"size\", \"transportation\", 5],\r\n    [\"size\", \"neighbourhood\", 3],\r\n    [\"size\", \"age\", 7],\r\n    [\"size\", \"yard\", 6],\r\n    [\"size\", \"facilities\", 6],\r\n    [\"size\", \"conditions\", 0.3333333333333333],\r\n    [\"transportation\", \"neighbourhood\", 0.3333333333333333],\r\n    [\"transportation\", \"age\", 5],\r\n    [\"transportation\", \"yard\", 3],\r\n    [\"transportation\", \"facilities\", 3],\r\n    [\"transportation\", \"conditions\", 0.2],\r\n    [\"neighbourhood\", \"age\", 6],\r\n    [\"neighbourhood\", \"yard\", 3],\r\n    [\"neighbourhood\", \"facilities\", 4],\r\n    [\"neighbourhood\", \"conditions\", 0.5],\r\n    [\"age\", \"yard\", 0.3333333333333333],\r\n    [\"age\", \"facilities\", 0.25],\r\n    [\"age\", \"conditions\", 0.14285714285714285],\r\n    [\"yard\", \"facilities\", 0.5],\r\n    [\"yard\", \"conditions\", 0.2],\r\n    [\"facilities\", \"conditions\", 0.2]\r\n  ],\r\n  \"alternatives_comparisons\": {\r\n    \"price\": [\r\n      [\"house 1\", \"house 2\", 0.14285714285714285],\r\n      [\"house 1\", \"house 3\", 0.2],\r\n      [\"house 2\", \"house 3\", 3]\r\n    ],\r\n    \"size\": [\r\n      [\"house 1\", \"house 2\", 5],\r\n      [\"house 1\", \"house 3\", 9],\r\n      [\"house 2\", \"house 3\", 4]\r\n    ],\r\n    \"transportation\": [\r\n      [\"house 1\", \"house 2\", 4],\r\n      [\"house 1\", \"house 3\", 0.2],\r\n      [\"house 2\", \"house 3\", 0.1111111111111111]\r\n    ],\r\n    \"neighbourhood\": [\r\n      [\"house 1\", \"house 2\", 9],\r\n      [\"house 1\", \"house 3\", 4],\r\n      [\"house 2\", \"house 3\", 0.25]\r\n    ],\r\n    \"age\": [\r\n      [\"house 1\", \"house 2\", 1],\r\n      [\"house 1\", \"house 3\", 1],\r\n      [\"house 2\", \"house 3\", 1]\r\n    ],\r\n    \"yard\": [\r\n      [\"house 1\", \"house 2\", 6],\r\n      [\"house 1\", \"house 3\", 4],\r\n      [\"house 2\", \"house 3\", 0.3333333333333333]\r\n    ],\r\n    \"facilities\": [\r\n      [\"house 1\", \"house 2\", 9],\r\n      [\"house 1\", \"house 3\", 6],\r\n      [\"house 2\", \"house 3\", 0.3333333333333333]\r\n    ],\r\n    \"conditions\": [\r\n      [\"house 1\", \"house 2\", 0.5],\r\n      [\"house 1\", \"house 3\", 0.5],\r\n      [\"house 2\", \"house 3\", 1]\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "missing comparisons",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"criteria\": {\r\n    \"id\": \"score\",\r\n    \"sub_criteria\": [\r\n      { \"id\": \"price\" },\r\n      { \"id\": \"size\" },\r\n      { \"id\": \"transportation\" },\r\n      { \"id\": \"neighbourhood\" },\r\n      { \"id\": \"age\" },\r\n      { \"id\": \"yard\" },\r\n      { \"id\": \"facilities\" },\r\n      { \"id\": \"conditions\" }\r\n    ]\r\n  },\r\n  \"alternatives\": [\r\n    { \"id\": \"house 1\" },\r\n    { \"id\": \"house 2\" },\r\n    { \"id\": \"house 3\" }\r\n  ],\r\n  \"criteria_comparisons\": [\r\n    [\"price\", \"size\", 4],\r\n    [\"price\", \"transportation\", 7],\r\n    [\"price\", \"neighbourhood\", 5],\r\n    [\"price\", \"age\", 8],\r\n    [\"price\", \"yard\", 6],\r\n    [\"price\", \"facilities\", 6],\r\n    [\"price\", \"conditions\", 2],\r\n    [\"size\", \"transportation\", 5],\r\n    [\"size\", \"neighbourhood\", 3],\r\n    [\"size\", \"age\", 7],\r\n    [\"size\", \"yard\", 6],\r\n    [\"size\", \"facilities\", 6],\r\n    [\"size\", \"conditions\", 0.3333333333333333],\r\n    [\"transportation\", \"neighbourhood\", 0.3333333333333333],\r\n    [\"transportation\", \"age\", 5],\r\n    [\"transportation\", \"yard\", 3],\r\n    [\"transportation\", \"facilities\", 3],\r\n    [\"transportation\", \"conditions\", 0.2],\r\n    [\"neighbourhood\", \"age\", 6],\r\n    [\"neighbourhood\", \"yard\", 3],\r\n    [\"neighbourhood\", \"facilities\", 4],\r\n    [\"neighbourhood\", \"conditions\", 0.5],\r\n    [\"age\", \"yard\", 0.3333333333333333],\r\n    [\"age\", \"facilities\", 0.25],\r\n    [\"age\", \"conditions\", 0.14285714285714285],\r\n    [\"yard\", \"facilities\", 0.5],\r\n    [\"yard\", \"conditions\", 0.2],\r\n    [\"facilities\", \"conditions\", 0.2]\r\n  ],\r\n  \"alternatives_comparisons\": {\r\n    \"price\": [\r\n      [\"house 1\", \"house 2\", 0.14285714285714285],\r\n      [\"house 1\", \"house 3\", 0.2],\r\n      [\"house 2\", \"house 3\", 3]\r\n    ],\r\n    \"size\": [\r\n      [\"house 1\", \"house 2\", 5],\r\n      [\"house 1\", \"house 3\", 9],\r\n      [\"house 2\", \"house 3\", 4]\r\n    ],\r\n    \"transportation\": [\r\n      [\"house 1\", \"house 2\", 4],\r\n      [\"house 1\", \"house 3\", 0.2],\r\n      [\"house 2\", \"house 3\", 0.1111111111111111]\r\n    ],\r\n    \"neighbourhood\": [\r\n      [\"house 1\", \"house 2\", 9],\r\n      [\"house 1\", \"house 3\", 4],\r\n      [\"house 2\", \"house 3\", 0.25]\r\n    ],\r\n    \"age\": [\r\n      [\"house 1\", \"house 2\", 1],\r\n      [\"house 1\", \"house 3\", 1],\r\n      [\"house 2\", \"house 3\", 1]\r\n    ],\r\n    \"yard\": [\r\n      [\"house 1\", \"house 2\", 6],\r\n      [\"house 1\", \"house 3\", 4],\r\n      [\"house 2\", \"house 3\", 0.3333333333333333]\r\n    ],\r\n    \"facilities\": [\r\n      [\"house 1\", \"house 2\", 9],\r\n      [\"house 1\", \"house 3\", 6],\r\n      [\"house 2\", \"house 3\", 0.3333333333333333]\r\n    ],\r\n    \"conditions\": [\r\n      [\"house 1\", \"house 2\", 0.5],\r\n      [\"house 1\", \"house 3\", 0.5],\r\n      [\"house 2\", \"house 3\", 1]\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": null
+			},
+			"response": []
+		}
+	]
+}
