@@ -81,8 +81,7 @@ class ComparisonMatrix:
         """
         xs, ys = np.array(self.matrix)[x], np.array(self.matrix[:, y].reshape(-1))
         # print(xs, ys)
-        no_zero_index = lambda l: {i for i in range(len(l)) if l[i] != 0}
-        a = no_zero_index(xs).intersection(no_zero_index(ys))
+        a = set(np.nonzero(xs)).intersection(set(np.nonzero(ys)))
         return a
         # if len(a) > 0:
         #     return a.pop()
@@ -150,7 +149,7 @@ class ComparisonMatrix:
         indexes = {i for i in range(len(self.matrix))}
         while len(indexes) > 0:
             i = indexes.pop()
-            a = no_zero_index(np.array(self.matrix)[i])
+            a = np.nonzero(np.array(self.matrix)[i])
             missing.append(list(a))
             indexes = indexes.difference(a)
         return missing
