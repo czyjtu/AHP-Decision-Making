@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-from src.decision_making.ahp.ranking_method import RankingMethod
+from src.decision_making.ahp.ranking_method import EVMRanking, RankingMethod
 from src.decision_making.ahp.utils import choice_list2matrix, comp_list2matrix
 from src.decision_making.ahp.comparison_matrix import ComparisonMatrix, MissingComparisonsError
 from src.decision_making.base import MCDA, A, Preference, Criterium
@@ -14,7 +14,7 @@ from typing import Dict, List, Set, Tuple
 
 
 class AHP(MCDA):
-    def __init__(self, root_criterium: List[Criterium], criteria_comp: List[List], alter_comp: Mapping[str, List[List]], ranking_method: RankingMethod=RankingMethod.EVM):
+    def __init__(self, root_criterium: List[Criterium], criteria_comp: List[List], alter_comp: Mapping[str, List[List]], ranking_method: RankingMethod=EVMRanking()):
         self.ranking_method = ranking_method
         self.root_criterium = root_criterium
         self.n = len(ComparisonMatrix._build_mapping(list(alter_comp.values())[0]))

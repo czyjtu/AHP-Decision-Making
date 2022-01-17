@@ -1,5 +1,5 @@
 from math import log10
-from src.decision_making.ahp.ranking_method import RankingMethod, evm_weights, gmm_weights
+from src.decision_making.ahp.ranking_method import RankingMethod, EVMRanking, GMMRanking
 from src.decision_making.ahp.utils import no_zero_index
 from itertools import chain
 import numpy as np
@@ -7,7 +7,12 @@ from typing import List, Tuple
 
 
 class MissingComparisonsError(ValueError):
-    def __init__(self, message='incorrect number of comparisons ', missing_comparisons=None, missing_comparisons_names=None):
+    def __init__(
+        self,
+        message="incorrect number of comparisons ",
+        missing_comparisons=None,
+        missing_comparisons_names=None,
+    ):
         super().__init__(message)
         self.missing_comparisons = missing_comparisons
         self.missing_comparisons_names = missing_comparisons_names
@@ -15,13 +20,13 @@ class MissingComparisonsError(ValueError):
 
 class ComparisonMatrix:
     RI = [0, 0, 0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49]
-    ranking_methods = {
-        RankingMethod.EVM: evm_weights,
-        RankingMethod.GMM: gmm_weights
-    }
 
-    def __init__(self, comparison_list: List[Tuple[str, str, float]], ranking_method: RankingMethod = RankingMethod.EVM,
-                 required_size=None):
+    def __init__(
+        self,
+        comparison_list: List[Tuple[str, str, float]],
+        ranking_method: RankingMethod = EVMRanking(),
+        required_size=None,
+    ):
         self.index_of = self._build_mapping(comparison_list)
         if required_size is not None and len(self.index_of) != required_size:
             self.matrix = self._build_matrix(comparison_list, required_size=required_size)
@@ -31,6 +36,7 @@ class ComparisonMatrix:
             self.complete_comprehensions()
         self.weights = self._calculate_weights(ranking_method)
         self.cr = self.CR()
+        self.ranking_method = ranking_method
         try:
             self.gi = self.GI()
         except AssertionError:
@@ -47,7 +53,7 @@ class ComparisonMatrix:
             n = len(self.index_of)
         M = np.zeros((n, n))
         for i in range(n):
-            M[i][i] = 1.
+            M[i][i] = 1.0
         for a, b, pref in comp_list:
             M[self.index_of[a]][self.index_of[b]] = pref
             M[self.index_of[b]][self.index_of[a]] = 1 / pref
@@ -58,8 +64,9 @@ class ComparisonMatrix:
         ids = set(chain.from_iterable([comp[:2] for comp in comp_list]))
         return {id_: idx for idx, id_ in enumerate(ids)}
 
-    def _calculate_weights(self, ranking_method: RankingMethod):
-        weights = self.ranking_methods[ranking_method](self.matrix)
+    def _calculate_weights(self, ranking_method: RankingMethod=None):
+        ranking = ranking_method or self.ranking_method
+        weights = ranking.calculate(self.matrix)
         return {id_: weights[idx] for id_, idx in self.index_of.items()}
 
     def complete(self) -> None:
@@ -68,7 +75,7 @@ class ComparisonMatrix:
 
         for i in range(len(self.matrix)):
             for j in range(i, len(self.matrix)):
-                if self.matrix[i, j] != .0:
+                if self.matrix[i, j] != 0.0:
                     self.matrix[j, i] = 1 / self.matrix[i, j]
 
     def __comprehended_index(self, x, y):
@@ -90,13 +97,18 @@ class ComparisonMatrix:
     @staticmethod
     def __name_on_index(indexes, i):
         name = list(filter(lambda x: x[1] == i, indexes.items()))
-        return str(name[0][0] if len(name) > 0 else f'unknown{i}')
+        return str(name[0][0] if len(name) > 0 else f"unknown{i}")
 
     def __contain_zeros(self):
-        return .0 in self.matrix.reshape(-1) or 0 in self.matrix.reshape(-1)
+        return 0.0 in self.matrix.reshape(-1) or 0 in self.matrix.reshape(-1)
 
     def __zero_indexes(self):
-        return [(i, j) for i in range(len(self.matrix)) for j in range(len(self.matrix)) if self.matrix[i, j] == 0]
+        return [
+            (i, j)
+            for i in range(len(self.matrix))
+            for j in range(len(self.matrix))
+            if self.matrix[i, j] == 0
+        ]
 
     def complete_comprehensions(self):
         t: bool = False
@@ -104,13 +116,25 @@ class ComparisonMatrix:
         while self.__contain_zeros():
             if t:
                 missing = self.__missing_comperes()
-                missing_names = list(map(lambda y: set(map(lambda x: (self.__name_on_index(self.index_of, x[0]), self.__name_on_index(self.index_of, x[1])), y)), missing))
+                missing_names = list(
+                    map(
+                        lambda y: set(
+                            map(
+                                lambda x: (
+                                    self.__name_on_index(self.index_of, x[0]),
+                                    self.__name_on_index(self.index_of, x[1]),
+                                ),
+                                y,
+                            )
+                        ),
+                        missing,
+                    )
+                )
                 raise MissingComparisonsError(
                     "incomplete matrix!\n"
-                    f"missing comparisons: \n" +
-                    repr({"one of: " + str(i) for i in missing_names}),
+                    f"missing comparisons: \n" + repr({"one of: " + str(i) for i in missing_names}),
                     missing_comparisons=missing,
-                    missing_comparisons_names=missing_names
+                    missing_comparisons_names=missing_names,
                 )
             t = True
             i = 0
@@ -141,7 +165,7 @@ class ComparisonMatrix:
         # print(sub_graphs)
         missing = []
         for i in range(len(sub_graphs) - 1):
-            missing.append({(x, y) for x in sub_graphs[i] for y in sum(sub_graphs[i + 1:], [])})
+            missing.append({(x, y) for x in sub_graphs[i] for y in sum(sub_graphs[i + 1 :], [])})
         return missing
 
     def CI(self) -> float:
