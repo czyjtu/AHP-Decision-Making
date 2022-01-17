@@ -1,5 +1,6 @@
 import pytest 
-from src import create_app
+from main import create_app
+from decision_making import AHP, Criterium, Hierarchy, EVMRanking
 from itertools import combinations
 
 
@@ -69,11 +70,24 @@ def data(criteria, alternatives, criteria_comparisons, alternatives_comparisons)
         "alternatives_comparisons": alternatives_comparisons
     }
 
+@pytest.fixture 
+def expected_answer():
+    return [[{"id":"house 2"},0.369],[{"id":"house 1"},0.346],[{"id":"house 3"},0.285]]
 
-def test_foo(client, data):
+
+def test_flask(client, data, expected_answer):
     response = client.get('/ahp/pairwise', json=data, query_string={"ranking_method": "EVM"})
-
     assert response.status_code == 200, f"Expected status code 200, got {response.status_code} with message: {response.data}"
     ranked = response.get_json()['ranked_alternatives']
-    assert ranked == [[{"id":"house 2"},0.369],[{"id":"house 1"},0.346],[{"id":"house 3"},0.285]], \
-        f"Invalid ranking. got {ranked}"
+    assert ranked == expected_answer, f"Invalid ranking. got {ranked}"
+
+
+def test_cmd(data, expected_answer):
+    root_criterium = Criterium.from_dict(data['criteria'])
+    ahp = AHP(root_criterium, data["criteria_comparisons"], data["alternatives_comparisons"], EVMRanking())
+    hierarchy = Hierarchy(root_criterium)
+    score = hierarchy.rank_alternatives(data["alternatives"], ahp)
+    assert score == expected_answer, f"Invalid ranking. got {score}"
+
+
+    

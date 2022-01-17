@@ -32,7 +32,7 @@ class ComparisonMatrix:
         else:
             self.matrix = self._build_matrix(comparison_list)
         if self.__contain_zeros():
-            self.complete_comprehensions()
+            self.complete_comparisons()
         self.weights = self._calculate_weights(ranking_method)
         self.cr = self.CR()
         self.ranking_method = ranking_method
@@ -46,13 +46,8 @@ class ComparisonMatrix:
         return self.weights.get(key, None)
 
     def _build_matrix(self, comp_list: List[Tuple[str, str, float]], required_size=None):
-        if required_size != None:
-            n = required_size
-        else:
-            n = len(self.index_of)
-        M = np.zeros((n, n))
-        for i in range(n):
-            M[i][i] = 1.0
+        n = required_size or len(self.index_of)
+        M = np.eye(n)
         for a, b, pref in comp_list:
             M[self.index_of[a]][self.index_of[b]] = pref
             M[self.index_of[b]][self.index_of[a]] = 1 / pref
@@ -110,7 +105,7 @@ class ComparisonMatrix:
             if self.matrix[i, j] == 0
         ]
 
-    def complete_comprehensions(self):
+    def complete_comparisons(self):
         t: bool = False
         to_complite = self.__zero_indexes()
         while self.__contain_zeros():

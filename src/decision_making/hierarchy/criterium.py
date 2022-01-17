@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Union, List, Callable
+import dacite
 
 
 @dataclass
@@ -30,5 +31,9 @@ class Criterium:
         self.sub_criteria.append(subcriterium)
         subcriterium.parent_criterium = self
         self.is_leaf = False
+
+    @staticmethod
+    def from_dict(criterium_dict: dict) -> Criterium:
+        return dacite.from_dict(Criterium, criterium_dict)
 
 

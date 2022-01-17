@@ -15,7 +15,10 @@ class Hierarchy:
         ranked = list(
             map(lambda a: (a, self.rank_wrt_criterium(a, self.root_criterium, model)), alternatives)
         )
-        return sorted(ranked, key=lambda item: -item[1])
+        ordered = sorted(ranked, key=lambda item: -item[1])
+        result = [[a, round(score, 3)] for a, score in ordered]
+        return result 
+
 
     def rank_wrt_criterium(self, alternative: A, criterium: Criterium, model: MCDA) -> float:
         if criterium.is_leaf:
