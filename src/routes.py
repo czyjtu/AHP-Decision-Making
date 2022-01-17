@@ -1,4 +1,4 @@
-from src.decision_making.base import Criterium, Preference
+from src.decision_making.hierarchy import Criterium
 from src.decision_making.ahp.ranking_method import EVMRanking, GMMRanking
 from src.decision_making.ahp.comparison_matrix import MissingComparisonsError
 from src.decision_making import Hierarchy

@@ -1,6 +1,5 @@
 from math import log10
 from src.decision_making.ahp.ranking_method import RankingMethod, EVMRanking, GMMRanking
-from src.decision_making.ahp.utils import no_zero_index
 from itertools import chain
 import numpy as np
 from typing import List, Tuple
@@ -87,6 +86,7 @@ class ComparisonMatrix:
         """
         xs, ys = np.array(self.matrix)[x], np.array(self.matrix[:, y].reshape(-1))
         # print(xs, ys)
+        no_zero_index = lambda l: {i for i in range(len(l)) if l[i] != 0}
         a = no_zero_index(xs).intersection(no_zero_index(ys))
         return a
         # if len(a) > 0:
