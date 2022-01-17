@@ -16,6 +16,19 @@ class Criterium:
         for sub in self.sub_criteria:
             sub.parent_criterium = self.id
 
-    def apply(self, fun: Callable[[Criterium], None]):
+    def apply(self, fun: Callable[[Criterium], None]) -> None:
         fun(self)
         list(map(fun, self.sub_criteria))
+
+    def add_subcriterium(self, subcriterium: Criterium) -> None:
+        if subcriterium in self.sub_criteria:
+            raise ValueError(f"Subcriterium {subcriterium.id} alredy in subcriteria list")
+        if subcriterium.parent_criterium is not None:
+            raise ValueError(
+                f"Given subcriterium {subcriterium.id} already has a parent criterium '{subcriterium.parent_criterium}'"
+            )
+        self.sub_criteria.append(subcriterium)
+        subcriterium.parent_criterium = self
+        self.is_leaf = False
+
+
