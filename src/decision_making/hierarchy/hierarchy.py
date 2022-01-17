@@ -1,5 +1,5 @@
-from src.decision_making.hierarchy.mcda import MCDA, A
-from src.decision_making.hierarchy.criterium import Criterium
+from decision_making.hierarchy.mcda import MCDA, A
+from decision_making.hierarchy.criterium import Criterium
 from typing import Sequence, Tuple
 
 

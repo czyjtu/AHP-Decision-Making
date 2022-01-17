@@ -1,5 +1,5 @@
 from math import log10
-from src.decision_making.ahp.ranking_method import RankingMethod, EVMRanking, GMMRanking
+from decision_making.ahp.ranking_method import RankingMethod, EVMRanking, GMMRanking
 from itertools import chain
 import numpy as np
 from typing import List, Tuple
@@ -23,7 +23,7 @@ class ComparisonMatrix:
     def __init__(
         self,
         comparison_list: List[Tuple[str, str, float]],
-        ranking_method: RankingMethod = EVMRanking(),
+        ranking_method: RankingMethod,
         required_size=None,
     ):
         self.index_of = self._build_mapping(comparison_list)

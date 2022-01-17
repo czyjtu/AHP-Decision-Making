@@ -1,9 +1,9 @@
-from src.decision_making.hierarchy import Criterium
-from src.decision_making.ahp.ranking_method import EVMRanking, GMMRanking
-from src.decision_making.ahp.comparison_matrix import MissingComparisonsError
-from src.decision_making import Hierarchy
-from src.decision_making import AHP
-from flask import request, Blueprint
+from decision_making.hierarchy import Criterium
+from decision_making.ahp.ranking_method import EVMRanking, GMMRanking
+from decision_making.ahp.comparison_matrix import MissingComparisonsError
+from decision_making import Hierarchy
+from decision_making import AHP
+from flask import request, Blueprint, Flask
 from http import HTTPStatus
 import dacite
 
@@ -48,3 +48,12 @@ def ahp():
 
     result = [[a, round(score, 3)] for a, score in ranked]
     return {"ranked_alternatives": result}
+
+
+def create_app():
+    app = Flask(__name__)
+    app.register_blueprint(ahp_blueprint)
+    return app
+
+if __name__ == '__main__':
+    create_app().run(debug=True, port=8800)

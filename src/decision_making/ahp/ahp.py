@@ -1,6 +1,6 @@
-from src.decision_making.ahp.ranking_method import EVMRanking, RankingMethod
-from src.decision_making.ahp.comparison_matrix import ComparisonMatrix
-from src.decision_making.hierarchy import MCDA, A, Criterium
+from decision_making.ahp.ranking_method import EVMRanking, RankingMethod
+from decision_making.ahp.comparison_matrix import ComparisonMatrix
+from decision_making.hierarchy import MCDA, A, Criterium
 
 from typing import Dict, List, Mapping
 import numpy as np
@@ -50,6 +50,4 @@ class AHP(MCDA):
         cr = self.alternatives_matrices[criterium.id]
         if isinstance(cr, ComparisonMatrix):
             return cr[alternative["id"]]
-        else:
-            # print(alternative['id'])
-            return float(np.mean([cm[alternative["id"]] for cm in cr.values()]))
+        return float(np.mean([cm[alternative["id"]] for cm in cr.values()]))

@@ -1,4 +1,4 @@
-from src.decision_making.hierarchy.criterium import Criterium
-from src.decision_making.hierarchy.hierarchy import Hierarchy
-from src.decision_making.hierarchy.mcda import MCDA, A
+from decision_making.hierarchy.criterium import Criterium
+from decision_making.hierarchy.hierarchy import Hierarchy
+from decision_making.hierarchy.mcda import MCDA, A
 

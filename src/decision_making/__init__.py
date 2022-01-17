@@ -1,2 +1,2 @@
-from src.decision_making.hierarchy import Hierarchy
-from src.decision_making.ahp import AHP 
+from decision_making.hierarchy import Hierarchy
+from decision_making.ahp import AHP 

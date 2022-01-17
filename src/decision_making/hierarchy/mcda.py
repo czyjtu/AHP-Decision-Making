@@ -1,4 +1,4 @@
-from src.decision_making.hierarchy.criterium import Criterium
+from decision_making.hierarchy.criterium import Criterium
 from typing import TypeVar
 from abc import ABC, abstractmethod
 
