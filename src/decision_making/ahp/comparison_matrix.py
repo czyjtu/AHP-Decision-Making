@@ -1,6 +1,6 @@
 from math import log10
-from src.decision_making.ahp.ranking_method import RankingMethod, evm_weights, gmm_weights
-from src.decision_making.ahp.utils import no_zero_index
+from .ranking_method import RankingMethod, EVMRanking, GMMRanking
+from .utils import no_zero_index
 from itertools import chain
 import numpy as np
 from typing import List, Tuple, Set, Dict
@@ -12,16 +12,18 @@ class MissingComparisonsError(ValueError):
         self.missing_comparisons_names = missing_comparisons_names
 
 
-class ComprehensionMatrix:
+class ComparisonMatrix:
     RI = [0, 0, 0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49]
     ranking_methods = {
-        RankingMethod.EVM: evm_weights,
-        RankingMethod.GMM: gmm_weights
+        "EVM": EVMRanking,
+        "GMM": GMMRanking
         }
 
-    def __init__(self, comparison_list: List[Tuple[str, str, float]], ranking_method: RankingMethod=RankingMethod.EVM):
+    def __init__(self, comparison_list: List[Tuple[str, str, float]], ranking_method: RankingMethod="EVM", required_size=None):
         self.index_of = self._build_mapping(comparison_list)
-        self.matrix = self._build_matrix(comparison_list)
+        self.matrix = self._build_matrix(comparison_list, required_size=required_size)
+        if self.__contain_zeros():
+            self.complete_comparisons()
         self.weights = self._calculate_weights(ranking_method)
         self.cr = self.CR()
         try:
@@ -67,18 +69,8 @@ class ComprehensionMatrix:
         calculates weights using :param ranking_method:
         :return: Dict[weights]
         """
-        weights = self.ranking_methods[ranking_method](self.matrix)
+        weights = ranking_method.calculate(self.matrix)
         return {id_: weights[idx] for id_, idx in self.index_of.items()}
-
-
-    def complete_matrix(self) -> None:
-        for i in range(len(self.matrix)):
-            self.matrix[i, i] = 1.0
-
-        for i in range(len(self.matrix)):
-            for j in range(i, len(self.matrix)):
-                if self.matrix[i, j] != .0:
-                    self.matrix[j, i] = 1 / self.matrix[i, j]
 
     def __common_comparison_index(self, x, y) -> Set:
         """
@@ -95,13 +87,6 @@ class ComprehensionMatrix:
     def __name_on_index(indexes, i):
         name = list(filter(lambda x: x[1] == i, indexes.items()))
         return str(name[0][0] if len(name) > 0 else f'unknown{i}')
-
-    def __comprehended_index(self, x, y):
-        a = no_zero_index(self.matrix[x]).intersection(no_zero_index(self.matrix[y]))
-        if a is not None:
-            return list(a)[0]
-        else:
-            return None
 
     def __contain_zeros(self):
         return .0 in self.matrix.reshape(-1) or 0 in self.matrix.reshape(-1)
@@ -139,7 +124,7 @@ class ComprehensionMatrix:
             i = 0
             while i < len(to_complite):
                 x, y = to_complite[i]
-                a = self.__comprehended_index(x, y)
+                a = self.__common_comparison_index(x, y)
                 if len(a) > 0:
                     self.matrix[x, y] = np.mean([self.matrix[x, j] * self.matrix[j, y] for j in a])
                     self.matrix[y, x] = 1 / self.matrix[x, y]
@@ -192,6 +177,7 @@ class ComprehensionMatrix:
         """
         n = len(self.matrix)
         assert n > 2, "matrix size cannot be less than 2"
+        assert not self.__contain_zeros(), "matrix still contains zeros"
         w = np.array(list(self.weights.values()))
         total_log_error = 0
         for i in range(n - 1):

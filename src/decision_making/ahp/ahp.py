@@ -1,5 +1,5 @@
-from decision_making.ahp.ranking_method import EVMRanking, RankingMethod
-from decision_making.ahp.comparison_matrix import ComparisonMatrix
+from .ranking_method import EVMRanking, RankingMethod
+from .comparison_matrix import ComparisonMatrix
 from decision_making.hierarchy import MCDA, A, Criterium
 
 from typing import Dict, List, Mapping

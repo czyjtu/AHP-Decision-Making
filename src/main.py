@@ -1,6 +1,6 @@
 import json
-from decision_making.hierarchy import Criterium
-from decision_making.ahp.ranking_method import EVMRanking, GMMRanking
+from decision_making import Criterium
+from decision_making import EVMRanking, GMMRanking
 from decision_making.ahp.comparison_matrix import MissingComparisonsError
 from decision_making import Hierarchy
 from decision_making import AHP
