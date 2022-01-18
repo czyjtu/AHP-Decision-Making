@@ -122,7 +122,12 @@ class ComprehensionMatrix:
         while self.__contain_zeros():
             if t:
                 missing = self.__missing_comperes()
-                missing_names = list(map(lambda y: set(map(lambda x: (self.__name_on_index(self.index_of, x[0]), self.__name_on_index(self.index_of, x[1])), y)), missing))
+                missing_names = list(map(lambda y: set(map(lambda x:
+                                                           (
+                    self.__name_on_index(self.index_of, x[0]),
+                    self.__name_on_index(self.index_of, x[1])
+                                                           ),
+                                                           y)), missing))
                 raise MissingComparisonsError(
                     "incomplete matrix!\n"
                     f"missing comparisons: \n" +
