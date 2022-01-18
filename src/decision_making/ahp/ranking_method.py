@@ -1,20 +1,23 @@
-from enum import Enum, auto
 import numpy as np
-from src.decision_making.ahp.utils import gmean
-
-class RankingMethod(Enum):
-    EVM = "EVM"
-    GMM = "GMM"
+from abc import ABC, abstractmethod
 
 
-def evm_weights(m: np.ndarray) -> np.ndarray:
-    eig_val, eig_vec = map(np.real, np.linalg.eig(m))
-    max_index = np.argmax(eig_val)
-    weights = eig_vec[:, max_index]
-    return weights / np.sum(weights)
+class RankingMethod(ABC):
+    @abstractmethod
+    def calculate(self, m: np.ndarray) -> np.ndarray:
+        pass
 
 
-def gmm_weights(m: np.ndarray) -> np.ndarray:
-    means = np.exp(np.log(m).mean(axis=1))
-    means /= sum(means)
-    return means
+class EVMRanking(RankingMethod):
+    def calculate(self, m: np.ndarray) -> np.ndarray:
+        eig_val, eig_vec = map(np.real, np.linalg.eig(m))
+        max_index = np.argmax(eig_val)
+        weights = eig_vec[:, max_index]
+        return weights / np.sum(weights)
+
+
+class GMMRanking(RankingMethod):
+    def calculate(self, m: np.ndarray) -> np.ndarray:
+        means = np.exp(np.log(m).mean(axis=1))
+        means /= sum(means)
+        return means
