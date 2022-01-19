@@ -19,7 +19,7 @@ class ComparisonMatrix:
         "GMM": GMMRanking
         }
 
-    def __init__(self, comparison_list: List[Tuple[str, str, float]], ranking_method: RankingMethod="EVM", required_size=None):
+    def __init__(self, comparison_list: List[Tuple[str, str, float]], ranking_method: RankingMethod, required_size=None):
         self.index_of = self._build_mapping(comparison_list)
         self.matrix = self._build_matrix(comparison_list, required_size=required_size)
         if self.__contain_zeros():
